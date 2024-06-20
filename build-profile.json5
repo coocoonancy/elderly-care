@@ -1,6 +1,19 @@
 {
   "app": {
     "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "0000001BDD25D07AC0C73C7B6A62D6B4BB3ECD33530014B21CA44910A58DB8C7477A7CE3B00FEE2219A544",
+          "certpath": "/Users/coocoonancy/harmonyos/harmonyos_docs/elderly_care/elderly_care.cer",
+          "keyAlias": "elderly_care",
+          "keyPassword": "0000001B16F7E17E50539AD47988F08294C96DF8E91819A4D5FFDA8771A7B28DC6AC7B678323C650250617",
+          "profile": "/Users/coocoonancy/harmonyos/harmonyos_docs/elderly_care/elderly_careDebug.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/coocoonancy/harmonyos/harmonyos_docs/elderly_care/elderly_care.p12"
+        }
+      }
     ],
     "products": [
       {
