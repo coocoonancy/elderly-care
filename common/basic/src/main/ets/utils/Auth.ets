@@ -32,5 +32,5 @@ class userStore {
 }
 
 // 导出单例
-export default new userStore()
+export const UserStore = new userStore()
 

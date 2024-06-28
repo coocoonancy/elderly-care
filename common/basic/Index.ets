@@ -1,9 +1,8 @@
-import userStore from './src/main/ets/utils/Auth'
-
 export { ResManager } from './src/main/ets/utils/ResManager'
 
 export { request } from './src/main/ets/utils/Request'
 
+export { UserStore } from './src/main/ets/utils/Auth'
 
 export {
   DeviceFunctionList,
@@ -16,4 +15,4 @@ export {
 export { EcDialogUpload } from './src/main/ets/components/EcDialogUpload'
 
 
-export { userStore }
+
