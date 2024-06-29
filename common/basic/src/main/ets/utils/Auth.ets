@@ -24,7 +24,7 @@ class userStore {
     await store.flush()
   }
 
-  async delUer() {
+  async delUser() {
     const store = await this.getStore()
     await store.delete(this.key)
     await store.flush()

@@ -8,6 +8,7 @@ export { UserStore } from './src/main/ets/utils/Auth'
 
 export { RouterConfig } from './src/main/ets/constants/RouterConfig'
 
+export { LoginApi } from './src/main/ets/api/UserApi'
 
 export {
   DeviceFunctionList,

@@ -1,4 +1,4 @@
-import { ResManager } from '@hm/basic/Index'
+import { ResManager, RouterConfig, UserStore } from '@hm/basic/Index'
 import { router } from '@kit.ArkUI'
 
 @Entry
@@ -11,13 +11,20 @@ struct SplashPage {
   timer: number = -1
 
   countdown() {
-    this.timer = setInterval(() => {
+    this.timer = setInterval(async () => {
       this.count--
       if (this.count === 0) {
         clearInterval(this.timer)
-        router.pushUrl({
-          url: 'pages/Index'
-        })
+        const data = await UserStore.getUser()
+        if (data.token) {
+          router.pushUrl({
+            url: 'pages/Index'
+          })
+        } else {
+          router.pushUrl({
+            url: RouterConfig.LOGIN_URL
+          })
+        }
       }
     }, 1000)
   }
