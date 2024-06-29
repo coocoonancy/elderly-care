@@ -1,5 +1,7 @@
 import { ResManager } from '@hm/basic/Index'
-import router from '@ohos.router'
+import { MessageCountData } from '../../viewmodel/HomeModel'
+import { getMessageCountApi } from '../../api/HomeApi'
+import { router } from '@kit.ArkUI'
 
 // 模块排列位置
 enum Pos {
@@ -17,10 +19,11 @@ export struct Home {
    * @param icon
    * @param url
    */
-  msgItem(title: string, icon: Resource | string, count: number, i: number) {
+  msgItem(title: string, icon: Resource | string, i: number) {
     Column() {
       Badge({
-        count, position: BadgePosition.RightTop, style: {
+        count: i === 1 ? this.msgCount?.elderAlertMsgCount! : this.msgCount?.nursingTaskMsgCount!,
+        position: BadgePosition.RightTop, style: {
           badgeColor: '#FF6363',
           borderColor: '#fff',
           borderWidth: 2,
@@ -112,6 +115,19 @@ export struct Home {
     .backgroundColor(ResManager.EC_MID_WHITE)
   }
 
+  // 1. 查询消息数量
+  @State
+  msgCount: MessageCountData | null = null
+
+  async getMsgCount() {
+    const data = await getMessageCountApi()
+    this.msgCount = data
+  }
+
+  aboutToAppear(): void {
+    this.getMsgCount()
+  }
+
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       Column({ space: 25 }) {
@@ -124,8 +140,8 @@ export struct Home {
           //  1.2 消息提醒
           Column() {
             Row({ space: 10 }) {
-              this.msgItem('老人报警消息', $r("app.media.ic_home_jkbj"), 6, 1)
-              this.msgItem('任务提醒消息', $r("app.media.ic_home_rwtx"), 2, 0)
+              this.msgItem('老人报警消息', $r("app.media.ic_home_jkbj"), 1)
+              this.msgItem('任务提醒消息', $r("app.media.ic_home_rwtx"), 0)
             }
           }
           .margin({

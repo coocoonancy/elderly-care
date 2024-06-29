@@ -29,8 +29,8 @@ export default class EntryAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage): void {
     // Main window is created, set main page for this ability
     Log.info('Ability onWindowStageCreate');
-
-    windowStage.loadContent(RouterConfig.SPLASH_URL, (err, data) => {
+    // 闪屏RouterConfig.SPLASH_URL
+    windowStage.loadContent('pages/Index', (err, data) => {
       if (err.code) {
         Log.error('Failed to load the content. Cause: %{public}s' + JSON.stringify(err) ?? '');
         return;
