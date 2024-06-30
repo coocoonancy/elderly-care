@@ -1,4 +1,4 @@
-import { ResManager } from '@hm/basic/Index'
+import { homeTabCtrl, ResManager, RouterConfig } from '@hm/basic/Index'
 import { MessageCountData } from '../../viewmodel/HomeModel'
 import { getMessageCountApi } from '../../api/HomeApi'
 import { router } from '@kit.ArkUI'
@@ -80,9 +80,14 @@ export struct Home {
       // .backgroundColor(ResManager.EC_MID_WHITE)
       .modStyle()
       .onClick(() => {
-        router.pushUrl({
-          url
-        })
+        if (url === '') {
+          homeTabCtrl.homeController?.changeIndex(2)
+        } else {
+          router.pushUrl({
+            url
+          })
+        }
+
       })
     } else {
       // 设备管理
@@ -164,7 +169,7 @@ export struct Home {
             // 内容
             Row({ space: 10 }) {
               this.careItem('护理任务', $r('app.media.icon_home_hlrw'), Pos.x, 'pages/duty/CareTaskPage')
-              this.careItem('护理记录', $r('app.media.icon_home_hljl'), Pos.x, 'pages/stage/NurseRecordsPage')
+              this.careItem('护理记录', $r('app.media.icon_home_hljl'), Pos.x, RouterConfig.STAGE_NURSE_RECORDS_URL)
 
             }
             .width('100%')

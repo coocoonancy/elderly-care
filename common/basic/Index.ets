@@ -10,6 +10,9 @@ export { RouterConfig } from './src/main/ets/constants/RouterConfig'
 
 export { LoginApi } from './src/main/ets/api/UserApi'
 
+export { homeTabCtrl } from './src/main/ets/utils/Index'
+
+
 export {
   DeviceFunctionList,
   BloodTimeItem,

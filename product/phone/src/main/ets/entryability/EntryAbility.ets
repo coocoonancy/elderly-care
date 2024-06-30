@@ -3,7 +3,7 @@ import { window } from '@kit.ArkUI';
 import { Log } from '@abner/log';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import { RouterConfig } from '@hm/basic/Index';
+import { RouterConfig, UserStore } from '@hm/basic/Index';
 
 // 设置语言为中文
 dayjs.locale('zh-cn');
@@ -35,7 +35,7 @@ export default class EntryAbility extends UIAbility {
         Log.error('Failed to load the content. Cause: %{public}s' + JSON.stringify(err) ?? '');
         return;
       }
-      Log.error('Failed to load the content. Cause: %{public}s' + JSON.stringify(err) ?? '');
+      Log.info('Succeeded in loading the content. Data: %{public}s' + JSON.stringify(data) ?? '');
     });
   }
 
