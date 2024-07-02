@@ -1,5 +1,7 @@
-import router from '@ohos.router'
-import { ResManager } from '@hm/basic/Index'
+import { ResManager, RouterConfig, UserStore } from '@hm/basic/Index'
+import { getUserApi } from '@hm/basic/src/main/ets/api/UserApi'
+import { UserData } from '@hm/basic/src/main/ets/viewmodel/UserModel'
+import { promptAction, router } from '@kit.ArkUI'
 
 @Component
 export struct Mine {
@@ -25,6 +27,48 @@ export struct Mine {
     .onClick(() => router.pushUrl({ url }))
   }
 
+  // 1. 获取用户信息
+  @StorageProp('user')
+  user: UserData | null = null
+
+  async getUser() {
+    const data = await getUserApi()
+    AppStorage.setOrCreate<UserData>('user', data)
+  }
+
+  aboutToAppear(): void {
+    this.getUser()
+  }
+
+  // 2. 退出登录
+  async logout() {
+    const data = await promptAction.showDialog({
+      title: '提示',
+      message: '确认退出登录吗？',
+      buttons: [
+        {
+          text: '取消',
+          color: '#ccc'
+        },
+        {
+          text: '确定',
+          color: '#000000'
+        }
+      ]
+    })
+    if (data.index === 1) {
+      // 1. 删除 token
+      UserStore.delUser()
+      //   2. 跳转登录页
+      router.pushUrl({
+        url: RouterConfig.LOGIN_URL
+      }, () => {
+        // 清除路由历史记录
+        router.clear()
+      })
+    }
+  }
+
   build() {
     Column() {
       // 1. 头部
@@ -37,23 +81,35 @@ export struct Mine {
           .margin({ top: 12, left: 24 })
           .padding({ top: this.topHeight })
         // 个人信息
+        // 个人信息
         Column({ space: 5 }) {
-          Image('https://img2.baidu.com/it/u=130573784,2479509663&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=534')
+          Image(this.user?.avatar ||
+            'https://img2.baidu.com/it/u=130573784,2479509663&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=534')
             .width(74)
             .aspectRatio(1)
             .borderRadius(37)
             .border({ width: 5, color: '#AEE8E4' })
-            .shadow({ offsetX: 0, offsetY: 2, radius: 21, color: '#0aa9941f' })
-          Text('刘大壮')
+            .shadow({
+              offsetX: 0,
+              offsetY: 2,
+              radius: 21,
+              color: '#0aa9941f'
+            })
+          Text(this.user?.nickName)
             .fontSize(ResManager.EC_PAGE_TITLE_FS)
             .fontColor(ResManager.EC_MID_BLACK)
             .fontWeight(500)
-          Text('sijigaowa@163.com')
+          Text(this.user?.username)
             .fontSize(13)
             .fontColor(ResManager.EC_MID_59)
 
         }
         .margin({ top: 64 - this.topHeight })
+        .onClick(() => {
+          router.pushUrl({
+            url: RouterConfig.USER_SET_URL
+          })
+        })
       }
       .width('100%')
       .height(330)
@@ -121,8 +177,9 @@ export struct Mine {
         .borderRadius(28)
         .backgroundColor('#fff')
         .margin({ top: 50 })
-
-
+        .onClick(() => {
+          this.logout()
+        })
     }
     .width('100%')
     .height('100%')

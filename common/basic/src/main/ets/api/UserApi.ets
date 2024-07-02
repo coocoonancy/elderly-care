@@ -30,3 +30,16 @@ export function updateUserPhotoApi(avatar: string) {
     }
   })
 }
+
+/**
+ * 更新用户昵称
+ * @param nickName
+ * @returns
+ */
+export function updateUserNameApi(nickName: string) {
+  return request<null, UpdateUserParams>({
+    url: '/employee/user/updateNickname', method: 'put', params: {
+      nickName
+    }
+  })
+}
