@@ -1,7 +1,7 @@
 // 消息类型
 import { MsgStatusComp } from '../components/MsgStatusComp'
-import router from '@ohos.router'
 import { ResManager } from '@hm/basic/Index'
+import { router } from '@kit.ArkUI'
 
 class MsgItem {
   type: string = ''
@@ -45,6 +45,14 @@ struct MsgPage {
     .margin({ right: ResManager.EC_CONTENT_SPACE })
     .height('100%')
 
+  }
+
+  aboutToAppear() {
+    const params: object = router.getParams()
+    console.info('消息类型：', params)
+    if (params) {
+      this.activeType = params['type']
+    }
   }
 
   build() {

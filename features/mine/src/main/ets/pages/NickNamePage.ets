@@ -1,4 +1,4 @@
-import { ResManager } from '@hm/basic/Index';
+import { ResManager, UserData } from '@hm/basic/Index';
 import { router } from '@kit.ArkUI';
 import { updateUserNameApi } from '@hm/basic/src/main/ets/api/UserApi';
 
@@ -9,13 +9,15 @@ struct NickNamePage {
   topHeight: number = 0
   @State
   nickname: string = '';
+  // 1. 回填修改用户数据
+  @StorageLink('user')
+  user: UserData | null = null
 
   aboutToAppear(): void {
     const params: object = router.getParams()
     this.nickname = params['name']
   }
 
-  // 提交
   // 提交
   async save() {
     await updateUserNameApi(this.nickname)
@@ -35,7 +37,7 @@ struct NickNamePage {
         Button('保存', { type: ButtonType.Capsule })
           .margin({ top: 50 })
           .width(230)
-          .enabled(false)
+          .enabled(this.nickname?.trim() ? true : false)
           .onClick(() => {
             this.save()
           })

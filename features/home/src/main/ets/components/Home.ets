@@ -46,7 +46,7 @@ export struct Home {
     .backgroundColor(ResManager.EC_MID_WHITE)
     .onClick(() => {
       router.pushUrl({
-        url: '@bundle:com.coocoonancy.elderlycare/message/ets/pages/MsgPage',
+        url: '@bundle:com.heima.elderly.pro/message/ets/pages/MsgPage',
         params: {
           type: i
         }
@@ -74,20 +74,24 @@ export struct Home {
           .fontColor(ResManager.EC_MID_19)
           .fontSize(ResManager.EC_NORMAL_FS)
       }
-      .padding({ top: 20, bottom: 23, left: 13, right: 13 })
+      .padding({
+        top: 20,
+        bottom: 23,
+        left: 13,
+        right: 13
+      })
       // .borderRadius(8)
       // .layoutWeight(1)
       // .backgroundColor(ResManager.EC_MID_WHITE)
       .modStyle()
       .onClick(() => {
-        if (url === '') {
-          homeTabCtrl.homeController?.changeIndex(2)
-        } else {
+        if (url) {
           router.pushUrl({
             url
           })
+        } else {
+          homeTabCtrl.homeController?.changeIndex(2)
         }
-
       })
     } else {
       // 设备管理
@@ -168,7 +172,8 @@ export struct Home {
               .margin({ bottom: 13 })
             // 内容
             Row({ space: 10 }) {
-              this.careItem('护理任务', $r('app.media.icon_home_hlrw'), Pos.x, 'pages/duty/CareTaskPage')
+              // 护理任务跳转第三个标签页
+              this.careItem('护理任务', $r('app.media.icon_home_hlrw'), Pos.x, '')
               this.careItem('护理记录', $r('app.media.icon_home_hljl'), Pos.x, RouterConfig.STAGE_NURSE_RECORDS_URL)
 
             }
@@ -188,10 +193,10 @@ export struct Home {
               .margin({ bottom: 13 })
             // 内容
             Row({ space: 10 }) {
-              this.careItem('设备安装', $r('app.media.icon_home_sbaz'), Pos.y, 'pages/device/SetupDevicePage')
-              this.careItem('设备绑定', $r('app.media.icon_home_sbkz'), Pos.y, 'pages/device/BindDevicePage')
-              this.careItem('我的设备', $r('app.media.icon_home_wdsb'), Pos.y, 'pages/device/MyDevicePage')
-              this.careItem('报警设备', $r('app.media.icon_home_bjsb'), Pos.y, 'pages/device/AlarmDevicePage')
+              this.careItem('设备安装', $r('app.media.icon_home_sbaz'), Pos.y, RouterConfig.DEVICE_SETUP_URL)
+              this.careItem('设备绑定', $r('app.media.icon_home_sbkz'), Pos.y, RouterConfig.DEVICE_BIND_URL)
+              this.careItem('我的设备', $r('app.media.icon_home_wdsb'), Pos.y, RouterConfig.DEVICE_MY_URL)
+              this.careItem('报警设备', $r('app.media.icon_home_bjsb'), Pos.y, RouterConfig.DEVICE_ALARM_URL)
 
             }
             .width('100%')

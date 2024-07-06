@@ -5,7 +5,7 @@ import { UserData } from '@hm/basic/src/main/ets/viewmodel/UserModel'
 import { EcLoading } from '@itheima/wing-care'
 import fs from '@ohos.file.fs';
 import { FormData } from '@ohos/axios'
-import { updateUserPhotoApi } from '@hm/basic/src/main/ets/api/UserApi'
+import { getUserApi, updateUserPhotoApi } from '@hm/basic/src/main/ets/api/UserApi'
 import { promptAction } from '@kit.ArkUI'
 import { emitter } from '@kit.BasicServicesKit'
 
@@ -33,48 +33,6 @@ struct MinePage {
     autoCancel: false,
     alignment: DialogAlignment.Center
   })
-  // 1. 回填修改用户数据
-  @StorageLink('user')
-  user: UserData | null = null
-
-  @Builder
-  cellItem(title: string, flag: 0 | 1) {
-    Row() {
-      Text(title)
-        .fontColor(ResManager.EC_MID_19)
-        .fontSize(ResManager.EC_MODULE_TITLE_FS)
-        .fontWeight(500)
-      Row({ space: 10 }) {
-        if (flag === 1) {
-          // 昵称修改
-          Text(this.user?.nickName)
-            .fontColor(ResManager.EC_MID_59)
-            .fontSize(ResManager.EC_NORMAL_FS)
-            .onClick(() => {
-              router.pushUrl({
-                url: RouterConfig.USER_NAME_URL
-              })
-            })
-        } else {
-          // 上传
-          Image(this.user?.avatar ||
-            'https://img2.baidu.com/it/u=130573784,2479509663&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=534')
-            .width(34)
-            .aspectRatio(1)
-            .borderRadius(17)
-            .onClick(() => {
-              this.uploadDialog.open()
-            })
-        }
-        Image($r('app.media.ic_arrow_black'))
-          .width(7)
-          .height(16)
-      }
-    }
-    .width('100%')
-    .padding({ top: 14, bottom: 14 })
-    .justifyContent(FlexAlign.SpaceBetween)
-  }
 
   async upload(uri: string) {
     this.loading.open()
@@ -106,13 +64,62 @@ struct MinePage {
     }
   }
 
-  getUser() {
+  // 1. 回填修改用户数据
+  @StorageLink('user')
+  user: UserData | null = null
 
+  async getUser() {
+    const data = await getUserApi()
+    AppStorage.setOrCreate<UserData>('user', data)
+  }
+
+  @Builder
+  cellItem(title: string, flag: 0 | 1) {
+    Row() {
+      Text(title)
+        .fontColor(ResManager.EC_MID_19)
+        .fontSize(ResManager.EC_MODULE_TITLE_FS)
+        .fontWeight(500)
+      Row({ space: 10 }) {
+        if (flag === 1) {
+          // 昵称修改
+          Text(this.user?.nickName)
+            .fontColor(ResManager.EC_MID_59)
+            .fontSize(ResManager.EC_NORMAL_FS)
+            .onClick(() => {
+              router.pushUrl({
+                url: RouterConfig.USER_NAME_URL,
+                params: { name: this.user?.nickName }
+              })
+            })
+        } else {
+          // 上传
+          Image(this.user?.avatar ||
+            'https://img2.baidu.com/it/u=130573784,2479509663&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=534')
+            .width(34)
+            .aspectRatio(1)
+            .borderRadius(17)
+            .onClick(() => {
+              this.uploadDialog.open()
+            })
+        }
+        Image($r('app.media.ic_arrow_black'))
+          .width(7)
+          .height(16)
+      }
+    }
+    .width('100%')
+    .padding({ top: 14, bottom: 14 })
+    .justifyContent(FlexAlign.SpaceBetween)
   }
 
   aboutToAppear(): void {
-    this.getUser()
     this.onUpdateUser()
+  }
+
+  onPageShow(): void {
+    Log.info('页面可见')
+    this.getUser()
   }
 
   onUpdateUser() {
@@ -123,6 +130,10 @@ struct MinePage {
 
   aboutToDisappear(): void {
     emitter.off(EventId.UpdateMine)
+  }
+
+  onBackPress(): boolean | void {
+    emitter.emit(EventId.UpdateMine)
   }
 
   build() {

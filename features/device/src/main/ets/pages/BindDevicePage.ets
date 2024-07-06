@@ -3,6 +3,7 @@ import router from '@ohos.router'
 import { ResManager } from '@hm/basic/Index'
 import { util } from '@kit.ArkTS'
 import { Log } from '@abner/log'
+import { getUnbindDeviceListApi } from '../api/DeviceApi'
 
 export interface DeviceItem {
   iotId: string
@@ -29,51 +30,30 @@ struct BindDevicePage {
   @State
   list: UnBindProductItem[] = []
   // 加载数据
-  load = () => {
-    // 请求数据
-    setTimeout(() => {
-      for (let index = 0; index < 3; index++) {
-        if (index === 0) {
-          this.list.push({
-            productId: util.generateRandomUUID(true),
-            productName: '智能血糖' + (this.list.length + 1),
-            isExpand: false,
-            deviceList: Array.from(Array(6))
-              .map((it: null, i: number) => {
-                let _dv: DeviceItem = {
-                  iotId: util.generateRandomUUID(true),
-                  nodeId: util.generateRandomUUID(true),
-                  deviceName: 'blood' + (i + 1),
-                  isSelected: false
-                }
-                return _dv
-              })
-          })
-        } else {
-          this.list.push({
-            productId: util.generateRandomUUID(true),
-            productName: '智能门禁' + (this.list.length + 1),
-            isExpand: false,
-            deviceList: Array.from(Array(10))
-              .map((it: null, i: number) => {
-                let _dv: DeviceItem = {
-                  iotId: util.generateRandomUUID(true),
-                  nodeId: util.generateRandomUUID(true),
-                  deviceName: 'door' + (i + 1),
-                  isSelected: false
-                }
-                return _dv
-              })
-          })
-        }
-
-      }
-    }, 1000)
+  load = async () => {
+    const list = await getUnbindDeviceListApi()
+    this.list = list
   }
+  // 2. 产品选择和折叠
+  // 加载更多和收起
+  @State
+  flag: number = 0
+  // 选择某个产品下设备
+  /**
+   *
+   * @param item 当前选择产品
+   * @param device 当前点击产品下的某个设备
+   */
+  @State
+  selectedProd: UnBindProductItem | null = null
+  selectedDevice: DeviceItem | null = null
 
   // 2. 产品选择和折叠
   // 加载更多和收起
   toggle(item: UnBindProductItem) {
+    item.isExpand = !item.isExpand
+    // 触发列表刷新
+    this.flag = Date.now()
   }
 
   // 选择某个产品下设备
@@ -83,6 +63,23 @@ struct BindDevicePage {
    * @param device 当前点击产品下的某个设备
    */
   selectDevice(item: UnBindProductItem, device: DeviceItem) {
+    // 1. 取消之前的选中
+    this.list.forEach((prod) => {
+      prod.deviceList.forEach((dev) => {
+        if (dev.isSelected) {
+          dev.isSelected = false
+        }
+      })
+    })
+    //   2. 把当前点击的选中
+    device.isSelected = !device.isSelected
+
+    // 存储选中的设备数据
+    this.selectedProd = item
+    this.selectedDevice = device
+
+
+    this.flag = Date.now()
   }
 
   @Builder
@@ -204,6 +201,10 @@ struct BindDevicePage {
 
   aboutToAppear() {
     this.load()
+  }
+
+  check() {
+
   }
 
   build() {
