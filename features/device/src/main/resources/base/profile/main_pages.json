@@ -1,5 +1,18 @@
 {
   "src": [
-    "pages/SetupDevicePage"
+    "pages/SetupDevicePage",
+    "pages/BindDevicePage",
+    "pages/MyDevicePage",
+    "pages/AlarmDevicePage",
+    "pages/access_control/DoorControlPage",
+    "pages/access_control/BluetoothOpenPage",
+    "pages/access_control/TempPasswordPage",
+    "pages/access_control/OpeningRecordPage",
+    "pages/ConnectTipPage",
+    "pages/ConnectNetPage",
+    "pages/ScanWifiPage",
+    "pages/NearDevicePage",
+    "pages/BindTipPage",
+    "pages/NetDoorPage"
   ]
 }

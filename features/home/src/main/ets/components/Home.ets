@@ -46,7 +46,7 @@ export struct Home {
     .backgroundColor(ResManager.EC_MID_WHITE)
     .onClick(() => {
       router.pushUrl({
-        url: '@bundle:com.heima.elderly.pro/message/ets/pages/MsgPage',
+        url: RouterConfig.USER_MSG_URL,
         params: {
           type: i
         }
